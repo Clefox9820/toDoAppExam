@@ -1,0 +1,24 @@
+  <!-- Input para nueva tarea -->
+  <ion-item>
+    <ion-input placeholder="Escribir nombre de tarea"></ion-input>
+  </ion-item>
+
+  <!-- Selector de prioridad -->
+
+  <ion-header>
+    <ion-label><strong>Prioridad</strong></ion-label>
+  </ion-header>
+  <ion-segment value="medium" class="ion-margin-vertical">
+    <ion-segment-button value="high">
+      <ion-label>Alta</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="medium">
+      <ion-label>Media</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="low">
+      <ion-label>Baja</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Botón para agregar tarea -->
+  <ion-button expand="block" (click)="addTask()">Agregar tarea</ion-button>
