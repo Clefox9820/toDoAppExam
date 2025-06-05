@@ -9,6 +9,9 @@ import {
   IonHeader,
 } from '@ionic/angular/standalone';
 
+import { Task } from '../types/task.model';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'add-task',
   templateUrl: './add-task.component.html',
@@ -21,18 +24,42 @@ import {
     IonInput,
     IonButton,
     IonHeader,
+    FormsModule
   ],
 })
 export class AddTaskComponent implements OnInit {
-  constructor() {}
+  @Output() taskAdded = new EventEmitter<Task>();
 
-  ngOnInit() {}
+  constructor() { }
 
-  taskName = '';
-  priority = 'medium';
+  ngOnInit() { }
+
+  task: Task = {
+    id: 0,
+    description: '',
+    priority: '0'
+  };
 
   addTask() {
-    localStorage.setItem("myCat", "Tom");
+    const newTask: Task = {
+      ...this.task,
+      id: Date.now()
+    };
+
+    const existing = localStorage.getItem('tasks');
+    const tasks: Task[] = existing ? JSON.parse(existing) : [];
+
+    tasks.push(newTask);
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    this.taskAdded.emit(newTask);
+
+    this.task = {
+      id: 0,
+      description: '',
+      priority: '0'
+    };
 
   }
 }
