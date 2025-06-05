@@ -1,17 +1,20 @@
-  <ion-list>
-    <ion-list-header>
-      <ion-label><strong>Tareas</strong></ion-label>
-    </ion-list-header>
+<add-task (taskAdded)="onTaskAdded($event)"> </add-task>
 
-    <ion-item *ngFor="let task of tasks; let i = index">
-      <ion-label>{{ task.name }}</ion-label>
-      <ion-button fill="clear" slot="end" color="danger" (click)="deleteTask(i)">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+<ion-list>
+  <ion-list-header>
+    <ion-label><strong>Tareas</strong></ion-label>
+  </ion-list-header>
 
-  <!-- Botón para borrar todas las tareas -->
-  <ion-button expand="block" fill="outline" color="medium" (click)="clearAllTasks()">
-    Borrar tareas
-  </ion-button>
+  <ion-item *ngFor="let task of tasks; let i = index">
+    <ion-label>{{ task.description }}</ion-label>
+    <ion-label>Prioridad {{ getPriorityText(task.priority) }}</ion-label>
+    <ion-button fill="clear" slot="end" color="danger" (click)="deleteTask(i)">
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-list>
+
+<!-- Botón para borrar todas las tareas -->
+<ion-button expand="block" fill="outline" color="medium" (click)="clearAllTasks()">
+  Borrar tareas
+</ion-button>

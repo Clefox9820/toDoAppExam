@@ -8,34 +8,46 @@ import {
   IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
+import { Task } from '../types/task.model';
+import { AddTaskComponent } from '../add-task/add-task.component';
 
 @Component({
   selector: 'tasks-list',
   templateUrl: './tasks-list.component.html',
   styleUrls: ['./tasks-list.component.scss'],
-  imports: [IonList, IonListHeader, IonItem, IonLabel, IonButton, IonIcon, CommonModule],
+  imports: [IonList, IonListHeader, IonItem, IonLabel, IonButton, IonIcon, CommonModule, AddTaskComponent],
 })
+
 export class TasksListComponent implements OnInit {
-  constructor() {}
-  tasks: { name: string; priority: string }[] = [];
+  constructor() { }
+  tasks: Task[] = []
 
   ngOnInit() {
-    // Datos hardcodeados de ejemplo
-    this.tasks = [
-      { name: 'Grocery Shopping', priority: 'high' },
-      { name: 'Pay Bills', priority: 'medium' },
-      { name: 'Book Appointment', priority: 'low' },
-      { name: 'Finish Homework', priority: 'high' },
-      { name: 'Call Mom', priority: 'medium' },
-      { name: 'Water Plants', priority: 'low' },
-    ];
+    const stored = localStorage.getItem('tasks');
+    this.tasks = stored ? JSON.parse(stored) : [];
+
   }
 
-   deleteTask(index: number) {
+  onTaskAdded(task: Task) {
+    this.tasks.push(task);
+  }
+
+  deleteTask(index: number) {
     this.tasks.splice(index, 1);
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 
   clearAllTasks() {
     this.tasks = [];
+    localStorage.removeItem('tasks');
+  }
+
+  getPriorityText(priority: string): string {
+    switch (priority) {
+      case '3': return 'Alta';
+      case '2': return 'Media';
+      case '1': return 'Baja';
+      default: return 'Nula';
+    }
   }
 }
