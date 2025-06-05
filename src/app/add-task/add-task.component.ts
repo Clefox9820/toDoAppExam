@@ -24,27 +24,34 @@ import { FormsModule } from '@angular/forms';
     IonInput,
     IonButton,
     IonHeader,
-    FormsModule
+    FormsModule,
   ],
 })
 export class AddTaskComponent implements OnInit {
   @Output() taskAdded = new EventEmitter<Task>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   task: Task = {
     id: 0,
     description: '',
-    priority: '0'
+    priority: '3',
   };
 
   addTask() {
     const newTask: Task = {
       ...this.task,
-      id: Date.now()
+      id: Date.now(),
     };
+
+    if (
+      this.task.description.length === 0 ||
+      this.task.priority === undefined
+    ) {
+      return;
+    }
 
     const existing = localStorage.getItem('tasks');
     const tasks: Task[] = existing ? JSON.parse(existing) : [];
@@ -55,11 +62,12 @@ export class AddTaskComponent implements OnInit {
 
     this.taskAdded.emit(newTask);
 
+    let lastPriority = this.task.priority;
+
     this.task = {
       id: 0,
       description: '',
-      priority: '0'
+      priority: lastPriority,
     };
-
   }
 }
