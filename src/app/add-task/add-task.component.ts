@@ -6,7 +6,7 @@ import {
   IonLabel,
   IonInput,
   IonButton,
-  IonHeader,
+  IonHeader, IonAlert, IonContent
 } from '@ionic/angular/standalone';
 
 import { Task } from '../types/task.model';
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.scss'],
-  imports: [
+  imports: [IonAlert,
     IonItem,
     IonSegment,
     IonSegmentButton,
@@ -28,11 +28,15 @@ import { FormsModule } from '@angular/forms';
   ],
 })
 export class AddTaskComponent implements OnInit {
+
+  alertOpen = false;
+
+
   @Output() taskAdded = new EventEmitter<Task>();
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   task: Task = {
     id: 0,
@@ -41,29 +45,25 @@ export class AddTaskComponent implements OnInit {
   };
 
   addTask() {
+    if (this.task.description === '') {
+      this.alertOpen = true;
+      console.log('Campos incompletos');
+      return;
+    }
+
     const newTask: Task = {
       ...this.task,
       id: Date.now(),
     };
 
-    if (
-      this.task.description.length === 0 ||
-      this.task.priority === undefined
-    ) {
-      return;
-    }
-
     const existing = localStorage.getItem('tasks');
     const tasks: Task[] = existing ? JSON.parse(existing) : [];
 
     tasks.push(newTask);
-
     localStorage.setItem('tasks', JSON.stringify(tasks));
-
     this.taskAdded.emit(newTask);
 
     let lastPriority = this.task.priority;
-
     this.task = {
       id: 0,
       description: '',
