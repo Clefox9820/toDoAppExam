@@ -1,20 +1,38 @@
-<add-task (taskAdded)="onTaskAdded($event)"> </add-task>
-
 <ion-list>
   <ion-list-header>
-    <ion-label><strong>Tareas</strong></ion-label>
   </ion-list-header>
 
   <ion-item *ngFor="let task of tasks; let i = index">
-    <ion-label>{{ task.description }}</ion-label>
-    <ion-label>Prioridad {{ getPriorityText(task.priority) }}</ion-label>
-    <ion-button fill="clear" slot="end" color="danger" (click)="deleteTask(i)">
+    <ion-label class="ion-text-wrap">
+      <div class="task-label">{{ task.description }}</div>
+      <div [ngClass]="{
+            'priority-high': task.priority === '3',
+            'priority-medium': task.priority === '2',
+            'priority-low': task.priority === '1'
+          }" class="priority-label">
+        <span [ngClass]="priorityClassMap[task.priority]">
+          Prioridad {{ priorityTextMap[task.priority]}}
+        </span>
+      </div>
+    </ion-label>
+
+    <!-- Boton para eliminar una tarea -->
+    <ion-button class="delete-button" slot="end" color="danger" fill="clear" id="trigger-delete-task-{{ i }}" (click)="setDeleteTask(i)">
       <ion-icon name="trash-outline"></ion-icon>
     </ion-button>
+
+    <!-- Alerta para eliminar una tarea -->
+    <ion-alert trigger="trigger-delete-task-{{ i }}" header="¿Eliminar tarea?"
+      message="Esta acción no se puede deshacer." [buttons]="deleteTaskButtons"
+      (didDismiss)="setDeleteTaskResult($event)"></ion-alert>
   </ion-item>
 </ion-list>
 
-<!-- Botón para borrar todas las tareas -->
-<ion-button expand="block" fill="outline" color="medium" (click)="clearAllTasks()">
-  Borrar tareas
+<!-- Boton para borrar todas las tareas -->
+<ion-button class="clear-all-button" expand="block" fill="outline" color="medium" id="trigger-clear-all" [disabled]="tasks.length === 0">
+  Borrar todas las tareas
 </ion-button>
+
+<!-- Alerta para eliminar todas las tareas -->
+<ion-alert  trigger="trigger-clear-all" header="¿Eliminar todas las tareas?" message="Esta acción no se puede deshacer."
+  [buttons]="clearAllAlertButtons" (didDismiss)="setClearAllResult($event)"></ion-alert>

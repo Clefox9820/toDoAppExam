@@ -6,68 +6,72 @@ import {
   IonLabel,
   IonInput,
   IonButton,
-  IonHeader, IonAlert, IonContent
+  IonHeader,
+  IonAlert, IonText
 } from '@ionic/angular/standalone';
 
-import { Task } from '../types/task.model';
+import { TodoTask } from '../types/task.model';
 import { FormsModule } from '@angular/forms';
+import { IonToolbar, IonTitle, IonButtons, IonIcon } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'add-task',
+  standalone: true,
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.scss'],
-  imports: [IonAlert,
+  imports: [IonText,
+    IonAlert,
     IonItem,
     IonSegment,
     IonSegmentButton,
     IonLabel,
     IonInput,
     IonButton,
-    IonHeader,
     FormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonIcon
+
   ],
 })
 export class AddTaskComponent implements OnInit {
+  @Output() dismiss = new EventEmitter<void>();
+
+  @Output() taskAdded = new EventEmitter<TodoTask>();
 
   alertOpen = false;
 
-
-  @Output() taskAdded = new EventEmitter<Task>();
-
-  constructor() { }
-
-  ngOnInit() { }
-
-  task: Task = {
+  task: TodoTask = {
     id: 0,
     description: '',
     priority: '3',
   };
 
+  ngOnInit() { }
+
   addTask() {
-    if (this.task.description === '') {
+    if (!this.task.description.trim() || !this.task.priority) {
       this.alertOpen = true;
-      console.log('Campos incompletos');
       return;
     }
 
-    const newTask: Task = {
+    const newTask: TodoTask = {
       ...this.task,
       id: Date.now(),
     };
 
-    const existing = localStorage.getItem('tasks');
-    const tasks: Task[] = existing ? JSON.parse(existing) : [];
-
-    tasks.push(newTask);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     this.taskAdded.emit(newTask);
 
-    let lastPriority = this.task.priority;
+    const lastPriority = this.task.priority;
     this.task = {
       id: 0,
       description: '',
       priority: lastPriority,
     };
+    this.dismiss.emit();
+
   }
+
 }

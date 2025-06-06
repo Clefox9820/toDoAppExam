@@ -1,0 +1,64 @@
+.spaced-item {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-left: 16px;
+  margin-top: 8px;
+  display: block;
+}
+
+.custom-button {
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.form-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+
+.priority-segment {
+  --background: transparent;
+}
+
+.priority-high {
+  --color-checked: white;
+  --indicator-color: var(--ion-color-danger);
+  --background-checked: var(--ion-color-danger);
+}
+
+.priority-medium {
+  --color-checked: white;
+  --indicator-color: var(--ion-color-warning);
+  --background-checked: var(--ion-color-warning);
+}
+
+.priority-low {
+  --color-checked: white;
+  --indicator-color: var(--ion-color-success);
+  --background-checked: var(--ion-color-success);
+}
+
+
+ion-segment-button {
+  height: 56px;            // altura mayor
+  font-size: 1.1rem;       // texto más grande
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --border-radius: 8px;
+}
+
+ion-segment {
+  --indicator-height: 4px; // línea indicadora más visible (opcional)
+}
+
+

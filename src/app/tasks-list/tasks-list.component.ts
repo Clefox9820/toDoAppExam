@@ -1,53 +1,98 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
+  IonAlert,
+  IonButton,
   IonList,
   IonListHeader,
   IonItem,
   IonLabel,
-  IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
-import { Task } from '../types/task.model';
-import { AddTaskComponent } from '../add-task/add-task.component';
+
+import type { OverlayEventDetail } from '@ionic/core';
+import { CommonModule } from '@angular/common';
+import { TodoTask } from '../types/task.model';
 
 @Component({
   selector: 'tasks-list',
+  standalone: true,
   templateUrl: './tasks-list.component.html',
   styleUrls: ['./tasks-list.component.scss'],
-  imports: [IonList, IonListHeader, IonItem, IonLabel, IonButton, IonIcon, CommonModule, AddTaskComponent],
+  imports: [
+    IonList,
+    IonListHeader,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonIcon,
+    IonAlert,
+    CommonModule,
+  ],
 })
+export class TasksListComponent {
+  @Input() tasks: TodoTask[] = [];
+  @Output() taskDeleted = new EventEmitter<number>();
+  @Output() clearAll = new EventEmitter<void>();
 
-export class TasksListComponent implements OnInit {
-  constructor() { }
-  tasks: Task[] = []
+  taskToDelete: number | null = null;
 
-  ngOnInit() {
-    const stored = localStorage.getItem('tasks');
-    this.tasks = stored ? JSON.parse(stored) : [];
+  priorityTextMap: { [key: string]: string } = {
+    '3': 'alta',
+    '2': 'media',
+    '1': 'baja'
+  };
 
+  priorityClassMap: { [key: string]: string } = {
+    '3': 'priority-chip priority-high',
+    '2': 'priority-chip priority-medium',
+    '1': 'priority-chip priority-low'
+  };
+
+  //Creacion de botones de alerta de borrado de todas las tareas
+  public clearAllAlertButtons = [
+    {
+      text: 'Cancelar',
+      role: 'cancel',
+    },
+    {
+      text: 'Borrar todas',
+      role: 'confirm',
+      handler: () => {
+        this.clearAll.emit();
+      },
+    },
+  ];
+
+  //Creacion de botones de alerta de borrado de una tarea
+  public deleteTaskButtons = [
+    {
+      text: 'Cancelar',
+      role: 'cancel',
+    },
+    {
+      text: 'Eliminar',
+      role: 'confirm',
+      handler: () => {
+        if (this.taskToDelete !== null) {
+          this.taskDeleted.emit(this.taskToDelete);
+          this.taskToDelete = null;
+        }
+      },
+    },
+  ];
+
+  //Mensaje que se muestra al borrar todas las tareas
+  setClearAllResult(event: CustomEvent<OverlayEventDetail>) {
+    console.log(`Borrar todas → role: ${event.detail.role}`);
   }
 
-  onTaskAdded(task: Task) {
-    this.tasks.push(task);
+  //Se envia el index de la tarea a borrar
+  setDeleteTask(index: number) {
+    this.taskToDelete = index;
   }
 
-  deleteTask(index: number) {
-    this.tasks.splice(index, 1);
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-  }
-
-  clearAllTasks() {
-    this.tasks = [];
-    localStorage.removeItem('tasks');
-  }
-
-  getPriorityText(priority: string): string {
-    switch (priority) {
-      case '3': return 'Alta';
-      case '2': return 'Media';
-      case '1': return 'Baja';
-      default: return 'Nula';
-    }
+  //Mensaje que se muestra al borrar una tarea
+  setDeleteTaskResult(event: CustomEvent<OverlayEventDetail>) {
+    console.log(`Eliminar una tarea → role: ${event.detail.role}`);
   }
 }
