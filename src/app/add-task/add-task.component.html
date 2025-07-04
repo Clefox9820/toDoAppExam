@@ -1,24 +1,41 @@
-  <!-- Input para nueva tarea -->
-  <ion-item>
-    <ion-input placeholder="Escribir nombre de tarea"></ion-input>
-  </ion-item>
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Añadir tarea</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss.emit()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <!-- Selector de prioridad -->
+<!-- Input para nueva tarea -->
+<ion-item class="spaced-item">
+  <ion-input [(ngModel)]="task.description" placeholder="Escribir nombre de tarea"></ion-input>
+</ion-item>
 
-  <ion-header>
-    <ion-label><strong>Prioridad</strong></ion-label>
-  </ion-header>
-  <ion-segment value="medium" class="ion-margin-vertical">
-    <ion-segment-button value="high">
-      <ion-label>Alta</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="medium">
-      <ion-label>Media</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="low">
-      <ion-label>Baja</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+<!-- Título de prioridad -->
+<ion-label class="section-title">Prioridad</ion-label>
 
-  <!-- Botón para agregar tarea -->
-  <ion-button expand="block" (click)="addTask()">Agregar tarea</ion-button>
+<!-- Selector de prioridad -->
+<ion-segment [(ngModel)]="task.priority" value="3" class="spaced-item priority-segment" mode="ios">
+  <ion-segment-button value="3" class="priority-high">
+    <ion-label>Alta</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="2" class="priority-medium">
+    <ion-label>Media</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="1" class="priority-low">
+    <ion-label>Baja</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<!-- Botón para agregar tarea -->
+<ion-button expand="block" color="danger" class="custom-button spaced-item" (click)="addTask()">
+  Agregar tarea
+</ion-button>
+
+<!-- Alerta de campos incompletos -->
+<ion-alert [isOpen]="alertOpen" header="Campos incompletos"
+  message="Por favor, escribe el nombre de la tarea y selecciona una prioridad." (didDismiss)="alertOpen = false"
+  buttons="OK"></ion-alert>
